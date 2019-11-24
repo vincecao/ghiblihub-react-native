@@ -1,4 +1,4 @@
-# Ghibili Hub
+# Ghibli Hub
 
 ![](./screenshots/merge_from_ofoct.png)
 
@@ -26,3 +26,6 @@ npm run ios8 #run Iphone 8 Simulator
 _11/24/2019_
 - init project, with basic home, and detail pages
 - Integate with [omdbapi](www.omdbapi.com) & [ghibliapi](https://ghibliapi.herokuapp.com/)
+
+## License
+MIT @ Vince Cao
