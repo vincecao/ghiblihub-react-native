@@ -4,58 +4,66 @@ import {
   View,
   Text,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from 'react-native';
 
-const DashBoardCard = ({ item, index, onSelected=f=>f }) => {
+const DashBoardCard = ({ item, index, onSelected = f => f }) => {
   return (
     <TouchableHighlight style={styles.button}
       onPress={() => onSelected(item)}
       underlayColor="gray">
       <View style={styles.sectionContainer} key={index}>
         <Text style={styles.sectionTitleSm}>{item.title} ({item.release_date})</Text>
-        <View style={styles.sectionDescription}>
+        <View style={{}}>
           <Image
             style={styles.ImagePoster}
-            source={{ uri: item.omdb.Poster }}
+            source={{ uri: item['tmdb']['poster_path']}}
           />
-          <View style={{ flexDirection: 'column', flex: 1, padding: 7, justifyContent: 'space-around' }}>
+          <View style={{ flexDirection: 'column', flex: 1, justifyContent: 'space-around' }}>
             <Text
-              style={styles.sectionText, { fontSize: 17, paddingBottom: 20 }}
+              style={[{ fontSize: 12, paddingVertical: 10, flex: 1 }]}
             >{item.omdb.Plot}</Text>
-            <View>
-              <Text
-                style={[styles.txtBold]}
-              >Director: </Text>
-              <Text
-                style={styles.sectionText}
-              >{item.director}</Text>
-            </View>
-            <View>
-              <Text
-                style={[styles.txtBold]}
-              >Producer: </Text>
-              <Text
-                style={styles.sectionText}
-              >{item.producer}</Text>
-            </View>
-            <View>
-              <Text
-                style={[styles.txtBold]}
-              >Genre: </Text>
-              <Text
-                style={styles.sectionText}
-              >{item.omdb.Genre}</Text>
-            </View>
-            <View>
-              <Text
-                style={[styles.txtBold]}
-              >Runtime: </Text>
-              <Text
-                style={styles.sectionText}
-              >{item.omdb.Runtime}</Text>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-around' }}>
+              <View style={{ flexDirection: 'column', flex: 1, justifyContent: 'space-around' }}>
+                <Text>
+                  <Text
+                    style={[{ fontSize: 14 }, styles.txtBold]}
+                  >Director: </Text>
+                  <Text
+                    style={styles.sectionText}
+                  >{item.director}</Text>
+                </Text>
+                <Text>
+                  <Text
+                    style={styles.txtBold}
+                  >Producer: </Text>
+                  <Text
+                    style={styles.sectionText}
+                  >{item.producer}</Text>
+                </Text>
+              </View>
+              <View style={{ flexDirection: 'column', flex: 1, justifyContent: 'space-around' }}>
+                <Text>
+                  <Text
+                    style={styles.txtBold}
+                  >Genre: </Text>
+                  <Text
+                    style={styles.sectionText}
+                  >{item.omdb.Genre}</Text>
+                </Text>
+                <Text>
+                  <Text
+                    style={styles.txtBold}
+                  >Runtime: </Text>
+                  <Text
+                    style={styles.sectionText}
+                  >{item.omdb.Runtime}</Text>
+                </Text>
+              </View>
             </View>
           </View>
+
         </View>
       </View>
     </TouchableHighlight>
@@ -66,7 +74,7 @@ const styles = StyleSheet.create({
   txtBold: {
     flex: 1,
     fontWeight: '600',
-    fontSize: 15
+    fontSize: 14
   },
   sectionContainer: {
     paddingVertical: 18,
@@ -81,22 +89,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     paddingBottom: 10
   },
-  sectionDescription: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: 8
-  },
   ImagePoster: {
-    width: 200,
-    height: 350,
+    width: Dimensions.get('window').width - 30,
+    height: 260,
     borderRadius: 10
   },
   sectionText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     paddingLeft: 5,
     paddingTop: 5
-
   }
 })
 
