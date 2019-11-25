@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import DashboardCard from '../parts/DashBoardCard'
-import { OMDB_APIKEY, TMDB_APIKEY } from '../../env'
+import { OMDB_APIKEY, TMDB_APIKEY, CUSTOMIZED_GOOGLE_SEATCH } from '../../env'
 export default class Dashboard extends Component {
 
 
@@ -54,6 +54,11 @@ export default class Dashboard extends Component {
         this.setState({
           queryLength: data.length
         })
+
+        data['photos'] = ['']
+        data['tmdb'] = {}
+        data['omdb'] = {}
+
         data.map((data, index) => {
           this.fetchOmdbDetail(data, index)
         })
@@ -74,7 +79,7 @@ export default class Dashboard extends Component {
     fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + TMDB_APIKEY + '&language=en-US&external_source=imdb_id')
       .then(response => response.json())
       .then(tmdb => {
-        if (tmdb.success) {
+        if (tmdb.success !== false) {
           tmdb = tmdb['movie_results'][0]
           tmdb['backdrop_path'] = this.geTmdbBImage(tmdb['backdrop_path'], 0)
           tmdb['poster_path'] = this.geTmdbBImage(tmdb['poster_path'], 0)
@@ -82,23 +87,10 @@ export default class Dashboard extends Component {
 
         data['tmdb'] = tmdb
 
-        this.setState({
-          data: [...this.state.data, data]
-        })
-
-        if (this.state.queryLength === (index - 1)) {
-          this.setState({
-            fetching: false
-          })
-        }
+        this.fetchGoogleImage(data, tmdb.title, index)
 
       })
       .catch(err => {
-        // data['tmdb'] = {}
-        // data['tmdb']['movie_results'] = [{}]
-        // this.setState({
-        //   data: [...this.state.data, data]
-        // })
         console.error('error fetch tmdbIdByImdbId', err)
       })
 
@@ -118,19 +110,40 @@ export default class Dashboard extends Component {
       .catch(err => console.error('error fetching ghi', err))
   }
 
+  fetchGoogleImage = (data, keyword, index) => {
+    fetch(CUSTOMIZED_GOOGLE_SEATCH + '&productTitle=' + keyword + ' screenshots')
+      .then(response => response.json())
+      .then(googleImage => {
+        data['photos'] = googleImage
+        this.setState({
+          data: [...this.state.data, data]
+        })
+
+        this.checkStopLoading()
+
+      })
+      .catch(err => console.error('error googleImage ghi', err))
+  }
+
+  checkStopLoading = (index) => {
+    if (this.state.queryLength === (index - 1)) {
+      this.setState({
+        fetching: false
+      })
+    }
+  }
+
   showFlatList = () => {
     const { data } = this.state
     const { navigate } = this.props.navigation
     return <FlatList
       data={data}
-      ItemSeparatorComponent={this.FlatListItemSeparator}
       renderItem={({ item, index }) => <DashboardCard item={item} index={index} onSelected={() => navigate('DetailsPage', { item })} />}
       ListHeaderComponent={() => {
         return <View style={styles.headerSectionContainer}>
           <Text style={styles.headerTitle}>Movie</Text>
         </View>
       }}
-    // stickyHeaderIndices={[this.state.queryLength]}
     />
   }
 
