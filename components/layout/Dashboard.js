@@ -14,8 +14,6 @@ import DashboardCard from '../parts/DashBoardCard'
 import { OMDB_APIKEY, TMDB_APIKEY, CUSTOMIZED_GOOGLE_SEATCH } from '../../env'
 export default class Dashboard extends Component {
 
-
-
   static navigationOptions = {
     headerStyle: {
       backgroundColor: 'rgba(255,255,255, 0.9)',
@@ -24,17 +22,131 @@ export default class Dashboard extends Component {
     title: 'Ghibli Hub',
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       data: [],
       fetching: true,
-      queryLength: -999
+      queryLength: -999,
+      anlist: []
     }
   }
 
   componentDidMount = () => {
-    this.fetchGhibliData()
+    // this.fetchGhibliData()
+    this.fetchAnilist(this.query, this.variables)
+  }
+
+  query = `query ($id: Int, $page: Int) {
+            Studio(id:$id){
+            name
+            media(page: $page) {
+              pageInfo {
+                total
+                lastPage
+                currentPage
+                hasNextPage
+              }
+              nodes {
+                description
+                title {
+                  romaji
+                  english
+                  native
+                }
+                format
+                trailer {
+                  site
+                  thumbnail
+                }
+                startDate {
+                  year
+                }
+                coverImage {
+                  extraLarge
+                  large
+                  medium
+                  color
+                }
+                bannerImage
+                averageScore
+                # tags {
+                #   name
+                # }
+              }
+            }
+          }
+        }
+          `;
+
+  variables = {
+    id: 21,
+    page: 1
+  };
+
+  fetchAnilist = (query, variables) => {
+    fetch('https://graphql.anilist.co', { //url, option
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: variables
+      })
+    })
+      .then(response => response.json())
+      .then(anlist => {
+        let hasNextPage = anlist["data"]["Studio"]["media"]["pageInfo"]["hasNextPage"]
+        anlist = anlist["data"]["Studio"]["media"]["nodes"]
+
+        this.setState({
+          anlist: [...this.state.anlist, ...anlist]
+        })
+
+        if (hasNextPage === true) {
+          this.fetchAnilist(query, { id: 21, page: variables['page'] + 1 })
+        } else {
+          this.setState({
+            queryLength: anlist.length
+          })
+          // console.log(this.state.anlist.length, this.state.queryLength)
+          this.state.anlist.map((data, index) => {
+            data['photos'] = ['']
+            data['tmdb'] = {}
+            data['omdb'] = {}
+            data["native"] = data["title"]["native"] ? data["title"]["native"] : ''
+            data["title"] = data["title"]["english"] ? data["title"]["english"] : data["title"]["romaji"]
+            data["release_date"] = data["startDate"]["year"]
+
+            //Image defalut
+            data['coverImage']['extraLarge'] = data['coverImage']['extraLarge'] ? data['coverImage']['extraLarge'] : ''
+            data['bannerImage'] = data['bannerImage'] ? data['bannerImage'] : data['coverImage']['extraLarge']
+
+            this.fetchOmdbDetail(data, index)
+          })
+        }
+      })
+      .catch(err => console.error('error fetching anlist', err))
+  }
+
+  fetchGhibliData = () => {
+    fetch('https://ghibliapi.herokuapp.com/films')
+      .then(response => response.json())
+      .then(Gbi => {
+        this.setState({
+          queryLength: Gbi.length
+        })
+
+        Gbi.map((data, index) => {
+          // data['photos'] = ['']
+          // data['tmdb'] = {}
+          // data['omdb'] = {}
+          this.fetchOmdbDetail(data, index)
+        })
+      })
+      .catch(err => console.error('error fetching ghi', err))
   }
 
   fetchOmdbDetail = (data, index) => {
@@ -42,28 +154,10 @@ export default class Dashboard extends Component {
       .then(response => response.json())
       .then(omdb => {
         data['omdb'] = omdb;
+        data['omdb']['Poster'] = data['omdb']['Poster'] && data['omdb']['Poster'] !== 'N/A' ? data['omdb']['Poster'] : data["coverImage"]["extraLarge"]
         this.fetchTmdbIdByImdbId(data, omdb['imdbID'], index)
       })
       .catch(err => console.error('error fetching movie', err))
-  }
-
-  fetchGhibliData = () => {
-    fetch('https://ghibliapi.herokuapp.com/films')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          queryLength: data.length
-        })
-
-        data['photos'] = ['']
-        data['tmdb'] = {}
-        data['omdb'] = {}
-
-        data.map((data, index) => {
-          this.fetchOmdbDetail(data, index)
-        })
-      })
-      .catch(err => console.error('error fetching ghi', err))
   }
 
   geTmdbBImage = (extend, size) => {
@@ -79,14 +173,15 @@ export default class Dashboard extends Component {
     fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + TMDB_APIKEY + '&language=en-US&external_source=imdb_id')
       .then(response => response.json())
       .then(tmdb => {
-        if (tmdb.success !== false) {
+        if (tmdb.success !== false && tmdb['movie_results'] != null && tmdb['movie_results'][0] != null) {
           tmdb = tmdb['movie_results'][0]
           tmdb['backdrop_path'] = this.geTmdbBImage(tmdb['backdrop_path'], 0)
           tmdb['poster_path'] = this.geTmdbBImage(tmdb['poster_path'], 0)
         }
 
         data['tmdb'] = tmdb
-
+        data['tmdb']['backdrop_path'] = data['tmdb']['backdrop_path'] ? data['tmdb']['backdrop_path'] : data['bannerImage']
+        data['tmdb']['poster_path'] = data['tmdb']['poster_path'] ? data['tmdb']['poster_path'] : data["coverImage"]["extraLarge"]
         this.fetchGoogleImage(data, tmdb.title, index)
 
       })
@@ -139,6 +234,7 @@ export default class Dashboard extends Component {
     return <FlatList
       data={data}
       renderItem={({ item, index }) => <DashboardCard item={item} index={index} onSelected={() => navigate('DetailsPage', { item })} />}
+      keyExtractor={(item, index) => index.toString()}
       ListHeaderComponent={() => {
         return <View style={styles.headerSectionContainer}>
           <Text style={styles.headerTitle}>Movie</Text>

@@ -14,7 +14,7 @@ cd ios
 pod install
 # prevent 'null is not an object' error
 
-# Modify API KEYs & CUSTOMIZED_GOOGLE_SEATCH in `env.js`
+# Modify API KEYs & CUSTOMIZED_GOOGLE_SEATCH in `env.js` for showing all data
 
 npm run ios8 #run Iphone 8 Simulator
 #npm run ios8p #run Iphone 8 Plus Simulator
@@ -22,6 +22,10 @@ npm run ios8 #run Iphone 8 Simulator
 ```
 
 ## Update Log
+_11/25/2019_
+- Replace ghibliapi with [Anilist GraphQL Api](//anilist.gitbook.io/anilist-apiv2-docs/)
+- Optimize codes
+
 _11/24/2019_
 - Integrate with [themoviedbAPI](//www.themoviedb.org/documentation/api) & [Google Custom Search API](//developers.google.com/custom-search)
 - Improve detail pages with highlight photos

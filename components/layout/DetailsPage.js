@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   View,
   Text,
   Image,
   StatusBar,
-  FlatList,
   Dimensions,
   ImageBackground,
   ScrollView,
   TouchableOpacity
 } from 'react-native';
-
+import LinearGradient from 'react-native-linear-gradient';
 import PhotoCard from '../parts/PhotoCard'
 
 const loopRating = (item) => {
@@ -28,7 +26,8 @@ const returnPhotosOfMovie = (dataSet) => {
 const DetailsPage = ({ navigation }) => {
   let item = navigation.state.params.item
   const { navigate } = navigation
-  let data = [item['tmdb']['backdrop_path'], item.omdb.Poster]
+  let data = [item['tmdb']['poster_path'], item['bannerImage'], item['tmdb']['backdrop_path'], item['omdb']['Poster'], item['coverImage']['extraLarge']]
+  // let data = [item['omdb']['Poster'], item['coverImage']['large'], item['bannerImage']]
   if (item['photos'].length > 0)
     data = [...data, ...item['photos']]
 
@@ -38,39 +37,41 @@ const DetailsPage = ({ navigation }) => {
       {/* <SafeAreaView> */}
       <ScrollView style={{ backgroundColor: 'rgba(0,0,0,0.02)' }}>
         <View>
-          <ImageBackground
-            style={styles.HeadImageBg}
-            blurRadius={Platform.OS == 'ios' ? 10 : 5}
-            source={{ uri: item['tmdb']['backdrop_path'] }}>
-            <View
-              style={{ position: 'absolute', width: Dimensions.get('window').width, height: 500, flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' }}></View>
-            <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, flex: 1 }}>
-              <Image style={styles.HeadImage} source={{ uri: item.omdb.Poster }} />
-              <View style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
-                <Text style={styles.HeaderTitle}>{item.title}</Text>
-                <Text style={styles.HeaderTitleOrigin}>{item['tmdb']['original_title']}</Text>
+          <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
+            <ImageBackground
+              imageStyle={{}}
+              style={styles.HeadImageBg}
+              blurRadius={Platform.OS == 'ios' ? 10 : 5}
+              source={{ uri: item['bannerImage'] }}>
+              {/* <View style={{ position: 'absolute', width: Dimensions.get('window').width, height: 500, flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' }}></View> */}
+              <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, flex: 1 }}>
+                <Image style={styles.HeadImage} source={{ uri: item['omdb']['Poster'] }} />
+                <View style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+                  <Text style={styles.HeaderTitle}>{item.title}</Text>
+                  <Text style={styles.HeaderTitleOrigin}>{item['native']}</Text>
+                </View>
               </View>
-            </View>
 
 
-            <View style={styles.HeadView}>
-              <Text style={styles.HeaderInfoLabel}>Description</Text>
-              <View style={{ height: 50 }}>
-                <ScrollView horizontal={false} showsHorizontalScrollIndicator={true} >
-                  <Text style={styles.HeaderInfoTxt}>{item.description}</Text>
-                </ScrollView>
+              <View style={styles.HeadView}>
+                <Text style={styles.HeaderInfoLabel}>Description</Text>
+                <View style={{ height: 50 }}>
+                  <ScrollView horizontal={false} showsHorizontalScrollIndicator={true} >
+                    <Text style={styles.HeaderInfoTxt}>{item.description}</Text>
+                  </ScrollView>
+                </View>
+                <Text style={styles.HeaderInfoLabel}>Director</Text>
+                <Text style={styles.HeaderInfoTxt}>{item["omdb"]["Director"]}</Text>
+                <Text style={styles.HeaderInfoLabel}>Writer</Text>
+                <Text style={styles.HeaderInfoTxt}>{item["omdb"]["Writer"]}</Text>
+                <Text style={styles.HeaderInfoLabel}>Release Date</Text>
+                <Text style={styles.HeaderInfoTxt}>{item.release_date}</Text>
               </View>
-              <Text style={styles.HeaderInfoLabel}>Director</Text>
-              <Text style={styles.HeaderInfoTxt}>{item.director}</Text>
-              <Text style={styles.HeaderInfoLabel}>Producer</Text>
-              <Text style={styles.HeaderInfoTxt}>{item.producer}</Text>
-              <Text style={styles.HeaderInfoLabel}>Release Date</Text>
-              <Text style={styles.HeaderInfoTxt}>{item.release_date}</Text>
-            </View>
-            <TouchableOpacity onPress={(e) => navigate('WebPage', { uri: 'https://www.imdb.com/title/' + item.omdb.imdbID, })}>
-              <Image style={{ position: 'absolute', right: 0, bottom: 0, width: 70, height: 40, resizeMode: 'contain', marginTop: 20 }} source={{ uri: 'https://m.media-amazon.com/images/G/01/IMDb/BG_rectangle._CB1509060989_SY230_SX307_AL_.png' }} />
-            </TouchableOpacity>
-          </ImageBackground>
+              <TouchableOpacity onPress={(e) => navigate('WebPage', { uri: 'https://www.imdb.com/title/' + item.omdb.imdbID, })}>
+                <Image style={{ position: 'absolute', right: 0, bottom: 0, width: 70, height: 40, resizeMode: 'contain', marginTop: 20 }} source={{ uri: 'https://m.media-amazon.com/images/G/01/IMDb/BG_rectangle._CB1509060989_SY230_SX307_AL_.png' }} />
+              </TouchableOpacity>
+            </ImageBackground>
+          </LinearGradient>
 
           <View style={{ width: Dimensions.get('window').width }}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

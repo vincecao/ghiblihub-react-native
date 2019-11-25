@@ -18,7 +18,8 @@ const DashBoardCard = ({ item, index, onSelected = f => f }) => {
         <View style={{}}>
           <Image
             style={styles.ImagePoster}
-            source={{ uri: item['tmdb']['poster_path']}}
+            source={{ uri: item["tmdb"]["poster_path"] }}
+          // source={{uri: item['tmdb']['backdrop_path']}}
           />
           <View style={{ flexDirection: 'column', flex: 1, justifyContent: 'space-around' }}>
             <Text
@@ -32,15 +33,15 @@ const DashBoardCard = ({ item, index, onSelected = f => f }) => {
                   >Director: </Text>
                   <Text
                     style={styles.sectionText}
-                  >{item.director}</Text>
+                  >{item["omdb"]["Director"]}</Text>
                 </Text>
                 <Text>
                   <Text
                     style={styles.txtBold}
-                  >Producer: </Text>
+                  >Actors: </Text>
                   <Text
                     style={styles.sectionText}
-                  >{item.producer}</Text>
+                  >{item["omdb"]["Actors"]}</Text>
                 </Text>
               </View>
               <View style={{ flexDirection: 'column', flex: 1, justifyContent: 'space-around' }}>
