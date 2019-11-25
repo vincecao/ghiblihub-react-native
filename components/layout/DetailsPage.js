@@ -6,51 +6,83 @@ import {
   Text,
   Image,
   StatusBar,
+  FlatList,
   Dimensions,
   ImageBackground,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 
+import PhotoCard from '../parts/PhotoCard'
+
 const loopRating = (item) => {
-  return item.omdb.Ratings.map((rating, index) => <Text style={{ paddingLeft: 15 }} key={index + '-loop'}><Text style={{ fontWeight: '600', paddingLeft: 15 }} key={index + '-label'}>{rating.Source}: </Text><Text key={index + 'value'}>{rating.Value}</Text></Text>)
+  return item.omdb.Ratings ? item.omdb.Ratings.map((rating, index) => <Text style={{ paddingLeft: 20, paddingVertical: 3 }} key={index + '-loop'}><Text style={{ fontWeight: '600', paddingLeft: 15 }} key={index + '-label'}>{rating.Source}: </Text><Text key={index + 'value'}>{rating.Value}</Text></Text>) : null
+}
+
+const returnPhotosOfMovie = (dataSet) => {
+  return dataSet.map((data, index) => {
+    return <PhotoCard item={data} key={index + '-photoCard-'} index={index} onSelected={() => { }} /> //TODO: onSelected Action
+  })
 }
 
 const DetailsPage = ({ navigation }) => {
   let item = navigation.state.params.item
   const { navigate } = navigation
+  let data = [item['tmdb']['backdrop_path'], item.omdb.Poster]
+  if (item['photos'].length > 0)
+    data = [...data, ...item['photos']]
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
       {/* <SafeAreaView> */}
-      <ScrollView style={{backgroundColor: 'rgba(0,0,0,0.02)'}}>
+      <ScrollView style={{ backgroundColor: 'rgba(0,0,0,0.02)' }}>
         <View>
-          <ImageBackground style={styles.HeadImageBg} blurRadius={Platform.OS == 'ios' ? 10 : 5}
-            source={{ uri: item.omdb.Poster }}>
-            <View style={{ position: 'absolute', width: Dimensions.get('window').width, height: 500, flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' }}></View>
-            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-              <Image style={styles.HeadImage} source={{ uri: item.omdb.Poster }}></Image>
-              <Text style={styles.HeaderTitle}>{item.title}</Text>
+          <ImageBackground
+            style={styles.HeadImageBg}
+            blurRadius={Platform.OS == 'ios' ? 10 : 5}
+            source={{ uri: item['tmdb']['backdrop_path'] }}>
+            <View
+              style={{ position: 'absolute', width: Dimensions.get('window').width, height: 500, flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' }}></View>
+            <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 10, flex: 1 }}>
+              <Image style={styles.HeadImage} source={{ uri: item.omdb.Poster }} />
+              <View style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+                <Text style={styles.HeaderTitle}>{item.title}</Text>
+                <Text style={styles.HeaderTitleOrigin}>{item['tmdb']['original_title']}</Text>
+              </View>
             </View>
+
+
             <View style={styles.HeadView}>
               <Text style={styles.HeaderInfoLabel}>Description</Text>
-              <ScrollView>
-                <Text style={styles.HeaderInfoTxt}>{item.description}</Text>
-              </ScrollView>
+              <View style={{ height: 50 }}>
+                <ScrollView horizontal={false} showsHorizontalScrollIndicator={true} >
+                  <Text style={styles.HeaderInfoTxt}>{item.description}</Text>
+                </ScrollView>
+              </View>
               <Text style={styles.HeaderInfoLabel}>Director</Text>
               <Text style={styles.HeaderInfoTxt}>{item.director}</Text>
               <Text style={styles.HeaderInfoLabel}>Producer</Text>
               <Text style={styles.HeaderInfoTxt}>{item.producer}</Text>
-              <Text style={styles.HeaderInfoLabel}>Release_date</Text>
+              <Text style={styles.HeaderInfoLabel}>Release Date</Text>
               <Text style={styles.HeaderInfoTxt}>{item.release_date}</Text>
             </View>
+            <TouchableOpacity onPress={(e) => navigate('WebPage', { uri: 'https://www.imdb.com/title/' + item.omdb.imdbID, })}>
+              <Image style={{ position: 'absolute', right: 0, bottom: 0, width: 70, height: 40, resizeMode: 'contain', marginTop: 20 }} source={{ uri: 'https://m.media-amazon.com/images/G/01/IMDb/BG_rectangle._CB1509060989_SY230_SX307_AL_.png' }} />
+            </TouchableOpacity>
           </ImageBackground>
+
+          <View style={{ width: Dimensions.get('window').width }}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              {returnPhotosOfMovie(data)}
+            </ScrollView>
+          </View>
+
           <View style={styles.BottomView}>
-            <Text style={styles.InfoLabel}>Release Date</Text>
+            <Text style={styles.InfoLabel}>Rating</Text>
             {loopRating(item)}
-            <Text style={styles.InfoLabel}>imdbID</Text>
-            <Text style={{ color: 'blue', paddingLeft: 30 }} onPress={(e) => navigate('WebPage', { uri: 'https://www.imdb.com/title/' + item.omdb.imdbID, })}>{item.omdb.imdbID.toUpperCase()}</Text>
-            <Text style={styles.InfoLabel}>Website</Text>
-            <Text style={styles.InfoTxt}>{item.omdb.Website}</Text>
+            {/* <Text style={styles.InfoLabel}>Website</Text>
+            <Text style={styles.InfoTxt}>{item.omdb.Website}</Text> */}
             <Text style={styles.InfoLabel}>Genre</Text>
             <Text style={styles.InfoTxt}>{item.omdb.Genre}</Text>
             <Text style={styles.InfoLabel}>Writer</Text>
@@ -78,11 +110,11 @@ DetailsPage.navigationOptions = ({ navigation }) => {
 const styles = StyleSheet.create({
   HeadImageBg: {
     display: 'flex',
-    height: 500,
     width: Dimensions.get('window').width,
     flexDirection: 'column',
     padding: 20,
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    borderRadius: 15
   },
   HeadImage: {
     height: 200,
@@ -90,11 +122,18 @@ const styles = StyleSheet.create({
     borderRadius: 15
   },
   HeaderTitle: {
-    flex: 1,
-    fontSize: 40,
+    fontSize: 35,
     fontWeight: '600',
-    padding: 20,
-    color: 'white'
+    paddingHorizontal: 20,
+    color: 'white',
+    marginVertical: 5
+  },
+  HeaderTitleOrigin: {
+    fontSize: 22,
+    fontWeight: '600',
+    paddingHorizontal: 20,
+    color: 'white',
+    marginVertical: 5
   },
   HeadView: {
     display: 'flex',
@@ -118,7 +157,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   InfoTxt: {
-    paddingLeft: 30
+    paddingLeft: 20
   },
   BottomView: {
     padding: 20,

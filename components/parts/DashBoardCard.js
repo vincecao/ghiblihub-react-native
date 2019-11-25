@@ -10,7 +10,7 @@ import {
 
 const DashBoardCard = ({ item, index, onSelected = f => f }) => {
   return (
-    <TouchableHighlight style={styles.button}
+    <TouchableHighlight
       onPress={() => onSelected(item)}
       underlayColor="gray">
       <View style={styles.sectionContainer} key={index}>
