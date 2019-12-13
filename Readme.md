@@ -1,11 +1,12 @@
 # Ghibli Hub
 
-![](./screenshots/merge_from_ofoct.png)
+![](./screenshots/ios-screen.png)
+
+![](./screenshots/android-screen.png)
 
 One iOS & Android mobile application by using React-native framework async calling public Open RESTful Apis (e.g. Studio Ghibli Api, TMDb Api), as well as AniList GraphQL Api, for fetching movie info and stage photos of firms made by Studio Ghibli.
 
 ## Build 
-_Test for ios only_
 
 ``` bash
 yarn install
@@ -16,9 +17,16 @@ pod install
 
 # Modify API KEYs & CUSTOMIZED_GOOGLE_SEATCH in `env.js` for showing all data
 
+# ios
 npm run ios8 #run Iphone 8 Simulator
 #npm run ios8p #run Iphone 8 Plus Simulator
 #npm run ios11 #run Iphone 11 Simulator
+
+# Android
+# open avd manager emulator, sdk 28
+npx react-native run-android
+# or
+npm run android
 ```
 
 ## Update Log

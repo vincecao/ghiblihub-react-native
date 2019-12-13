@@ -12,6 +12,7 @@ import {
 
 import DashboardCard from '../parts/DashBoardCard'
 import { OMDB_APIKEY, TMDB_APIKEY, CUSTOMIZED_GOOGLE_SEATCH } from '../../env'
+// import { OMDB_APIKEY, TMDB_APIKEY, CUSTOMIZED_GOOGLE_SEATCH } from '../../env-dev'
 export default class Dashboard extends Component {
 
   static navigationOptions = {
