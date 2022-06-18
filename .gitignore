@@ -1,9 +1,6 @@
 # OSX
 #
 .DS_Store
-/__tests__/
-components/functions
-env-dev.js
 
 # Xcode
 #
@@ -37,7 +34,6 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
-yarn.lock
 
 # BUCK
 buck-out/
@@ -61,3 +57,9 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# env
+.env
+
+# coverage
+/coverage

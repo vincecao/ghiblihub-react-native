@@ -9,29 +9,30 @@ One iOS & Android mobile application by using React-native framework async calli
 ## Build 
 
 ``` bash
-yarn install
+# install
+yarn
 
 cd ios
 pod install
-# prevent 'null is not an object' error
-
-# Modify API KEYs & CUSTOMIZED_GOOGLE_SEATCH in `env.js` for showing all data
+# Modify API KEYs in .env
 
 # ios
-npm run ios8 #run Iphone 8 Simulator
+yarn ios8 #run Iphone 8 Simulator
 #npm run ios8p #run Iphone 8 Plus Simulator
 #npm run ios11 #run Iphone 11 Simulator
 
 # Android
-# open avd manager emulator, sdk 28
-npx react-native run-android
-# or
-npm run android
+# open avd manager emulator, sdk 28 or newer
+yarn android
 ```
 
 ## Update Log
+_06/18/2022_
+- Upgrade dependencies 
+- Migrate from JS to TS
+
 _11/25/2019_
-- Replace ghibliapi with [Anilist GraphQL Api](//anilist.gitbook.io/anilist-apiv2-docs/)
+- Replace `ghibliapi` with [Anilist GraphQL Api](//anilist.gitbook.io/anilist-apiv2-docs/)
 - Optimize codes
 
 _11/24/2019_
@@ -39,7 +40,7 @@ _11/24/2019_
 - Improve detail pages with highlight photos
 
 _11/23/2019_
-- init project, with basic home, and detail pages
+- Init project with basic home and detail pages
 - Integrate with [omdbapi](//omdbapi.com) & [ghibliapi](//ghibliapi.herokuapp.com/)
 
 ## License
