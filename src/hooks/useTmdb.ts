@@ -4,7 +4,6 @@ import {TMDB_API_KEY} from 'react-native-dotenv';
 
 const TMDB_PREFIX_URL = 'https://api.themoviedb.org/3/find';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function generateTmdbImage(extend: string) {
   return [
     `https://image.tmdb.org/t/p/w500_and_h282_face${extend}`,

@@ -19,19 +19,21 @@ function Navigation() {
           component={DetailsPage}
           options={{headerShown: false}}
         />
-        <Stack.Screen name="WebPage" component={WebViewPage} />
+        <Stack.Screen
+          name="WebPage"
+          component={WebViewPage}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-const App = () => {
+export default function App() {
   return (
     <SafeAreaProvider>
       <Navigation />
       <StatusBar />
     </SafeAreaProvider>
   );
-};
-
-export default App;
+}

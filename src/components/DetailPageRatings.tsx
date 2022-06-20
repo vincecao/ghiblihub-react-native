@@ -11,12 +11,10 @@ export default function DetailPageRatings({
 }: DetailPageRatingsProps): ReactElement {
   return (
     <>
-      {ratings.map(({Source, Value}, index) => (
-        <Text style={styles.loop} key={`${index}-loop`}>
-          <Text style={styles.label} key={`${index}-label`}>
-            {`${Source}:`}
-          </Text>
-          <Text key={index + 'value'}>{Value}</Text>
+      {ratings.map(({Source: source, Value: value}) => (
+        <Text style={styles.loop} key={source}>
+          <Text style={styles.label}>{`${source}:`}</Text>
+          <Text>{value}</Text>
         </Text>
       ))}
     </>

@@ -2,12 +2,12 @@ import axios from 'axios';
 import {usePromiseState} from '@vincecao/use-tools';
 import {OMDB_API_KEY} from 'react-native-dotenv';
 
-const OMDB_URL = 'http://www.omdbapi.com';
+const OMDB_URL = 'https://www.omdbapi.com';
 
 export type Rating = {Source: string; Value: string};
 
 export type OmdbResponse = {
-  Poster: string | 'N/A';
+  Poster: string | undefined;
   Writer: string;
   imdbID: string;
   Genre: string;
@@ -30,12 +30,18 @@ function fetchOmdb(title: string): Promise<OmdbResponse> {
         t: title,
       },
     })
-    .then(response => response.data);
+    .then(response => {
+      if (response.data.Poster === 'N/A') {
+        // if poster is 'N/A' assign undefined
+        response.data.Poster = undefined;
+      }
+      return response.data;
+    });
 }
 
 export default function useOmdb(title: string): [OmdbResponse | null] {
   const {data} = usePromiseState({
-    promise: () => fetchOmdb(title || ''), // TODO: update library for falsy type cast
+    promise: () => fetchOmdb(title),
     deps: [title],
   });
   return [data];

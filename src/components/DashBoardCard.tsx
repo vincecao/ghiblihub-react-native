@@ -10,6 +10,7 @@ import {
 import {AnilistData} from '../hooks/useAnilist';
 import useOmdb, {OmdbResponse} from '../hooks/useOmdb';
 import useTmdb, {TmdbResponse} from '../hooks/useTmdb';
+import DashboardCardLabelSection from './DashboardCardLabelSection';
 
 type DashBoardCardProps = {
   aniData: AnilistData;
@@ -42,33 +43,19 @@ export default function DashBoardCard({
             }}
           />
           <View style={styles.column}>
-            <Text style={[{fontSize: 12, paddingVertical: 10, flex: 1}]}>
-              {omdbData.Plot}
-            </Text>
-            <View style={styles.row}>
-              <View style={styles.column}>
-                <Text>
-                  <Text style={[{fontSize: 14}, styles.txtBold]}>
-                    Director:{' '}
-                  </Text>
-                  <Text style={styles.sectionText}>{omdbData.Director}</Text>
-                </Text>
-                <Text>
-                  <Text style={styles.txtBold}>Actors: </Text>
-                  <Text style={styles.sectionText}>{omdbData.Actors}</Text>
-                </Text>
-              </View>
-              <View style={styles.column}>
-                <Text>
-                  <Text style={styles.txtBold}>Genre: </Text>
-                  <Text style={styles.sectionText}>{omdbData.Genre}</Text>
-                </Text>
-                <Text>
-                  <Text style={styles.txtBold}>Runtime: </Text>
-                  <Text style={styles.sectionText}>{omdbData.Runtime}</Text>
-                </Text>
-              </View>
-            </View>
+            <Text style={styles.plot}>{omdbData.Plot}</Text>
+            {[
+              ['Director', omdbData.Director],
+              ['Actors', omdbData.Actors],
+              ['Genre', omdbData.Genre],
+              ['Runtime', omdbData.Runtime],
+            ].map(([label, text]) => (
+              <DashboardCardLabelSection
+                key={label}
+                label={label}
+                text={text}
+              />
+            ))}
           </View>
         </View>
       </View>
@@ -77,10 +64,10 @@ export default function DashBoardCard({
 }
 
 const styles = StyleSheet.create({
-  txtBold: {
+  plot: {
+    fontSize: 12,
+    paddingVertical: 10,
     flex: 1,
-    fontWeight: '600',
-    fontSize: 14,
   },
   sectionContainer: {
     paddingVertical: 18,
@@ -99,12 +86,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 30,
     height: 260,
     borderRadius: 10,
-  },
-  sectionText: {
-    flex: 1,
-    fontSize: 13,
-    paddingLeft: 5,
-    paddingTop: 5,
   },
   column: {
     flexDirection: 'column',

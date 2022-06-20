@@ -6,7 +6,7 @@ import {ParamList} from '../types';
 
 export default function WebViewPage({
   route,
-}: NativeStackScreenProps<ParamList, 'WebPage'>): ReactElement | null {
+}: NativeStackScreenProps<ParamList, 'WebPage'>): ReactElement {
   return <WebView style={styles.container} source={route.params} />;
 }
 
