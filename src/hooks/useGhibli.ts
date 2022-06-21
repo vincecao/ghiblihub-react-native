@@ -1,3 +1,4 @@
+import {useCallback} from 'react';
 import axios from 'axios';
 import {usePromiseState} from '@vincecao/use-tools';
 
@@ -13,7 +14,7 @@ function fetchGhibli(): Promise<GhibliResponse> {
 
 export default function useGhibli(): [GhibliResponse | null] {
   const {data} = usePromiseState({
-    promise: fetchGhibli,
+    promise: useCallback(fetchGhibli, []),
   });
   return [data];
 }

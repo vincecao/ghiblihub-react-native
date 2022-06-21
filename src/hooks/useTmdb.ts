@@ -1,3 +1,4 @@
+import {useCallback, useMemo} from 'react';
 import axios from 'axios';
 import {usePromiseState} from '@vincecao/use-tools';
 import {TMDB_API_KEY} from 'react-native-dotenv';
@@ -21,10 +22,7 @@ export type TmdbResponse = {
   movie_results: TmdbResponseResult[];
 };
 
-async function fetchTmdb(id: string | undefined): Promise<TmdbResponse> {
-  if (!id) {
-    throw new Error('missing id');
-  }
+async function fetchTmdb(id: string): Promise<TmdbResponse> {
   const items = await axios
     .get<TmdbResponse>(`${TMDB_PREFIX_URL}/${id}`, {
       params: {
@@ -43,8 +41,8 @@ async function fetchTmdb(id: string | undefined): Promise<TmdbResponse> {
 
 export default function useTmdb(id: string | undefined): [TmdbResponse | null] {
   const {data} = usePromiseState({
-    promise: () => fetchTmdb(id),
-    deps: [id],
+    promise: useCallback(() => !!id && fetchTmdb(id), [id]),
+    deps: useMemo(() => [id], [id]),
   });
   return [data];
 }

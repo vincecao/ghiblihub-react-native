@@ -1,3 +1,4 @@
+import {useCallback} from 'react';
 import {usePromiseState} from '@vincecao/use-tools';
 import axios from 'axios';
 
@@ -97,7 +98,7 @@ async function fetchAnilist(): Promise<AnilistData[]> {
 
 export default function useAnilist(): [AnilistData[] | null] {
   const {data} = usePromiseState({
-    promise: fetchAnilist,
+    promise: useCallback(fetchAnilist, []),
   });
   return [data];
 }
