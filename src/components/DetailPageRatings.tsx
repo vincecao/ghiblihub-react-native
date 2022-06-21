@@ -13,7 +13,7 @@ export default function DetailPageRatings({
     <>
       {ratings.map(({Source: source, Value: value}) => (
         <Text style={styles.loop} key={source}>
-          <Text style={styles.label}>{`${source}:`}</Text>
+          <Text style={styles.label}>{`${source}: `}</Text>
           <Text>{value}</Text>
         </Text>
       ))}
