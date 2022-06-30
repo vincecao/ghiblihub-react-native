@@ -1,6 +1,6 @@
 import {useCallback, useMemo} from 'react';
 import axios from 'axios';
-import {usePromiseState} from '@vincecao/use-tools';
+import {UsePromiseState, usePromiseState} from '@vincecao/use-tools';
 import {TMDB_API_KEY} from 'react-native-dotenv';
 
 const TMDB_PREFIX_URL = 'https://api.themoviedb.org/3/find';
@@ -39,10 +39,11 @@ async function fetchTmdb(id: string): Promise<TmdbResponse> {
   return items;
 }
 
-export default function useTmdb(id: string | undefined): [TmdbResponse | null] {
-  const {data} = usePromiseState({
-    promise: useCallback(() => !!id && fetchTmdb(id), [id]),
-    deps: useMemo(() => [id], [id]),
-  });
-  return [data];
+export default function useTmdb(
+  id: string | undefined,
+): UsePromiseState<TmdbResponse> {
+  return usePromiseState(
+    useCallback(() => !!id && fetchTmdb(id), [id]),
+    useMemo(() => ({deps: [id]}), [id]),
+  );
 }

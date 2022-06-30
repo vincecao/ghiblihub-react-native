@@ -19,7 +19,7 @@ export default function Dashboard({
           aniData={aniData}
           index={index}
           onSelected={(omdbData: OmdbResponse, tmdbData: TmdbResponse) => {
-            navigate('DetailsPage', {aniData, omdbData, tmdbData});
+            navigate('DetailPage', {aniData, omdbData, tmdbData});
           }}
         />
       )}

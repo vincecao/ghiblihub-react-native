@@ -3,17 +3,17 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StyleSheet, ScrollView} from 'react-native';
 import PhotoCards from './PhotoCards';
 import {ParamList} from '../types';
-import DetailsPageHeader from './DetailsPageHeader';
-import DetailsPageBody from './DetailsPageBody';
+import DetailPageHeader from './DetailPageHeader';
+import DetailPageBody from './DetailPageBody';
 
-export default function DetailsPage({
+export default function DetailPage({
   route,
   navigation: {navigate},
-}: NativeStackScreenProps<ParamList, 'DetailsPage'>): ReactElement {
+}: NativeStackScreenProps<ParamList, 'DetailPage'>): ReactElement {
   let {aniData, omdbData, tmdbData} = route.params;
   return (
     <ScrollView style={styles.scrollView}>
-      <DetailsPageHeader
+      <DetailPageHeader
         backgroundSource={aniData.bannerImage}
         posterSource={omdbData.Poster || ''}
         title={{english: aniData.title.english, native: aniData.title.native}}
@@ -38,7 +38,7 @@ export default function DetailsPage({
           aniData.coverImage.extraLarge,
         ]}
       />
-      <DetailsPageBody
+      <DetailPageBody
         bodySections={[
           ['Rating', omdbData.Ratings],
           ['Website', omdbData.Website],

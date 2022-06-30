@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {StatusBar} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Dashboard from './components/Dashboard';
-import DetailsPage from './components/DetailsPage';
+import DetailPage from './components/DetailPage';
 import WebViewPage from './components/WebViewPage';
 
 const Stack = createNativeStackNavigator();
@@ -15,8 +15,8 @@ function Navigation() {
       <Stack.Navigator>
         <Stack.Screen name="GhibliHub" component={Dashboard} />
         <Stack.Screen
-          name="DetailsPage"
-          component={DetailsPage}
+          name="DetailPage"
+          component={DetailPage}
           options={{headerShown: false}}
         />
         <Stack.Screen

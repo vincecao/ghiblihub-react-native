@@ -1,6 +1,6 @@
 import {useCallback} from 'react';
 import axios from 'axios';
-import {usePromiseState} from '@vincecao/use-tools';
+import {UsePromiseState, usePromiseState} from '@vincecao/use-tools';
 
 const GHIBLI_URL = 'https://ghibliapi.herokuapp.com/films';
 
@@ -12,9 +12,6 @@ function fetchGhibli(): Promise<GhibliResponse> {
   return axios.get<GhibliResponse>(GHIBLI_URL).then(response => response.data);
 }
 
-export default function useGhibli(): [GhibliResponse | null] {
-  const {data} = usePromiseState({
-    promise: useCallback(fetchGhibli, []),
-  });
-  return [data];
+export default function useGhibli(): UsePromiseState<GhibliResponse> {
+  return usePromiseState(useCallback(fetchGhibli, []));
 }

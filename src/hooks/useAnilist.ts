@@ -1,5 +1,5 @@
 import {useCallback} from 'react';
-import {usePromiseState} from '@vincecao/use-tools';
+import {UsePromiseState, usePromiseState} from '@vincecao/use-tools';
 import axios from 'axios';
 
 const QUERY = `query ($id: Int, $page: Int) {
@@ -96,9 +96,6 @@ async function fetchAnilist(): Promise<AnilistData[]> {
   return totalData;
 }
 
-export default function useAnilist(): [AnilistData[] | null] {
-  const {data} = usePromiseState({
-    promise: useCallback(fetchAnilist, []),
-  });
-  return [data];
+export default function useAnilist(): UsePromiseState<AnilistData[]> {
+  return usePromiseState(useCallback(fetchAnilist, []));
 }

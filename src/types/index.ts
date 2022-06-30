@@ -4,7 +4,7 @@ import {TmdbResponse} from '../hooks/useTmdb';
 
 export type ParamList = {
   GhibliHub: undefined;
-  DetailsPage: {
+  DetailPage: {
     aniData: AnilistData;
     omdbData: OmdbResponse;
     tmdbData: TmdbResponse;

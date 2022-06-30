@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import DetailPageIMDBLogo from './DetailPageIMDBLogo';
-import DetailsPageHeaderLabelSection from './DetailsPageHeaderLabelSection';
+import DetailPageHeaderLabelSection from './DetailPageHeaderLabelSection';
 
-type DetailsPageHeaderProps = {
+type DetailPageHeaderProps = {
   backgroundSource: string;
   posterSource: string;
   title: {
@@ -22,13 +22,13 @@ type DetailsPageHeaderProps = {
   onPressIMDB: () => void;
 };
 
-export default function DetailsPageHeader({
+export default function DetailPageHeader({
   backgroundSource,
   posterSource,
   title,
   labelSections,
   onPressIMDB,
-}: DetailsPageHeaderProps) {
+}: DetailPageHeaderProps) {
   return (
     <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']}>
       <ImageBackground
@@ -45,7 +45,7 @@ export default function DetailsPageHeader({
 
         <View style={styles.HeaderLabelSectionView}>
           {labelSections.map(([label, value]) => (
-            <DetailsPageHeaderLabelSection
+            <DetailPageHeaderLabelSection
               key={label}
               label={label}
               value={value}

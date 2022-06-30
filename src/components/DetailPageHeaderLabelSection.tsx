@@ -5,15 +5,15 @@ function stripHtmlTags(str: string): string {
   return str.replace(/(<([^>]+)>)/g, '');
 }
 
-type DetailsPageHeadLabelSectionProps = {
+type DetailPageHeadLabelSectionProps = {
   label: string;
   value: string | number;
 };
 
-export default function DetailsPageHeadLabelSection({
+export default function DetailPageHeadLabelSection({
   label,
   value,
-}: DetailsPageHeadLabelSectionProps) {
+}: DetailPageHeadLabelSectionProps) {
   return (
     <>
       <Text style={styles.HeaderInfoLabel}>{label}</Text>

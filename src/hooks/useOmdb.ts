@@ -1,6 +1,6 @@
 import {useCallback, useMemo} from 'react';
 import axios from 'axios';
-import {usePromiseState} from '@vincecao/use-tools';
+import {UsePromiseState, usePromiseState} from '@vincecao/use-tools';
 import {OMDB_API_KEY} from 'react-native-dotenv';
 
 const OMDB_URL = 'https://www.omdbapi.com';
@@ -40,10 +40,9 @@ function fetchOmdb(title: string): Promise<OmdbResponse> {
     });
 }
 
-export default function useOmdb(title: string): [OmdbResponse | null] {
-  const {data} = usePromiseState({
-    promise: useCallback(() => fetchOmdb(title), [title]),
-    deps: useMemo(() => [title], [title]),
-  });
-  return [data];
+export default function useOmdb(title: string): UsePromiseState<OmdbResponse> {
+  return usePromiseState(
+    useCallback(() => fetchOmdb(title), [title]),
+    useMemo(() => ({deps: [title]}), [title]),
+  );
 }

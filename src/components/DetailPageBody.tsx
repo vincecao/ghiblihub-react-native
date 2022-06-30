@@ -3,11 +3,11 @@ import {View, Text, StyleSheet} from 'react-native';
 import {Rating} from '../hooks/useOmdb';
 import DetailPageRatings from './DetailPageRatings';
 
-type DetailsPageBodyProps = {
+type DetailPageBodyProps = {
   bodySections: [string, string | number | Rating[]][];
 };
 
-export default function DetailsPageBody({bodySections}: DetailsPageBodyProps) {
+export default function DetailPageBody({bodySections}: DetailPageBodyProps) {
   return (
     <View style={styles.BodyView}>
       {bodySections.map(([label, value]) => {
